@@ -1,0 +1,100 @@
+<Page 
+    x:Class="SmartScheduler.SchedulePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SmartScheduler"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:con="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:sys="using:System"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <TextBlock x:Name="NotifText" HorizontalAlignment="Left" VerticalAlignment="Top" Text="Notification will be sent out at ###" Visibility="Collapsed" Margin="25,10,0,0" FontSize="20" Foreground="Gray"/>
+        <con:UniformGrid Rows="1" Height="50" VerticalAlignment="Bottom" Background="WhiteSmoke" Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" MinWidth="20" Grid.ColumnSpan="4" Margin="25,0,0,0">
+                <DropDownButton Background="WhiteSmoke" ToolTipService.ToolTip="General Settings">
+                    <SymbolIcon Symbol="Setting"/>
+                    <DropDownButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Name="GroupMenu" Text="Group Menu" Click="GroupMenu_Click"/>
+                            <MenuFlyoutItem x:Name="FontChange" Text="Font Size" Click="ChangeFont_Click"/>
+                        </MenuFlyout>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
+            <FontIcon Glyph="&#xE784;" Margin="10,0,10,0"/>
+                <ComboBox x:Name="EmployeeComboBox" PlaceholderText="Employees" PlaceholderForeground="Gray" Margin="0,0,10,0" ItemsSource="{Binding workers}" VerticalAlignment="Center">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding WName}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button x:Name="AddEmployB" Background="WhiteSmoke"  ToolTipService.ToolTip="Add Employee" Click="AddEmployeeB_Click">
+                    <SymbolIcon Symbol="Add"/>
+                </Button>
+                <Button x:Name="EditEmployB" Background="WhiteSmoke" ToolTipService.ToolTip="Edit Employee" Click="EditEmployB_Click">
+                    <SymbolIcon Symbol="Edit"/>
+                </Button>
+                <Button x:Name="RemoveEmployB" Background="WhiteSmoke" ToolTipService.ToolTip="Remove Employee" Click="RemoveEmployB_Click">
+                    <SymbolIcon Symbol="Remove"/>
+                </Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3">
+                <FontIcon Glyph="&#xE784;"/>
+                <ComboBox x:Name="PresetComboBox" PlaceholderText="Presets" MinWidth="125" VerticalAlignment="Center" PlaceholderForeground="Gray"/>
+                <Button x:Name="SavePreB" Background="WhiteSmoke" ToolTipService.ToolTip="Save Preset" Click="SavePreB_Click">
+                    <SymbolIcon Symbol="Save"/>
+                </Button>
+                <Button x:Name="LoadPreB" Background="WhiteSmoke" ToolTipService.ToolTip="Load Preset" Click="LoadPreB_Click">
+                    <SymbolIcon Symbol ="Download"/>
+                </Button>
+                <Button x:Name="EditPreB" Background="WhiteSmoke" ToolTipService.ToolTip="Edit Preset" Click="EditPreB_Click">
+                    <SymbolIcon Symbol="Edit"/>
+                </Button>
+                <Button x:Name="RemovePreB" Background="WhiteSmoke" ToolTipService.ToolTip="Remove Preset" Click="RemovePreB_Click">
+                    <SymbolIcon Symbol="Remove"/>
+                </Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <FontIcon Glyph="&#xE784;"/>
+                <Button Content="Clear Chart" Background="WhiteSmoke" Click="ClearB_Click"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" Spacing="40">
+                <CalendarDatePicker x:Name="WeekSelect" PlaceholderText="Change Date" DateChanged="WeekSelect_DateChanged"/>
+                <ComboBox x:Name="GroupSelectBox" PlaceholderText="Select Group" PlaceholderForeground="Gray"  VerticalAlignment="Center" SelectionChanged="GroupSelectBox_SelectionChanged"/>
+            </StackPanel>
+            <Button x:Name="SendToGrpB" Content="Send to Group" Background="WhiteSmoke" Click="SendToGrpB_Click" IsEnabled="False" />
+            
+        </con:UniformGrid>
+        
+        <Grid x:Name="RenderGrid">
+            <TextBlock x:Name="TitleBlock" Margin="0,140,0,0" Padding="50,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="40" Text="September, Week of date - date"/>
+            <TextBlock x:Name="LocationBlock" Margin="0,160,0,0" Padding="0,0,50,0"  HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="25" Text="Select group in toolbar" Foreground="Gray"/>
+            <con:DataGrid x:Name="WeekDT" ItemsSource="{Binding}" Width="Auto" 
+                          AutoGenerateColumns="False" BeginningEdit="WeekDT_BeginningEdit" 
+                          SelectionMode="Extended" GridLinesVisibility="All" 
+                          CanUserReorderColumns="False" ClipboardCopyMode="ExcludeHeader"
+                          Background="White" AlternatingRowBackground="WhiteSmoke"
+                          Margin="0,200,0,50" BorderBrush="White" BorderThickness="50,0,50,0" 
+                          HeadersVisibility="All" RowHeight="50">
+                <con:DataGrid.Columns>
+                    <con:DataGridTextColumn x:Name="WorkerNameCol" Binding="{Binding WName}" Width="*"/>
+                    <con:DataGridTextColumn x:Name="MondayCol" Binding="{Binding DayHoursC[0]}" Width="*"/>
+                    <con:DataGridTextColumn x:Name="TuesdayCol" Binding="{Binding DayHoursC[1]}" Width="*"/>
+                    <con:DataGridTextColumn x:Name="WednesdayCol" Binding="{Binding DayHoursC[2]}" Width="*"/>
+                    <con:DataGridTextColumn x:Name="ThursdayCol" Binding="{Binding DayHoursC[3]}" Width="*"/>
+                    <con:DataGridTextColumn x:Name="FridayCol" Binding="{Binding DayHoursC[4]}" Width="*"/>
+                    <con:DataGridTextColumn x:Name="SaturdayCol" Binding="{Binding DayHoursC[5]}" Width="*"/>
+                    <con:DataGridTextColumn x:Name="SundayCol" Binding="{Binding DayHoursC[6]}" Width="*" />
+                </con:DataGrid.Columns>
+                <con:DataGrid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextWrapping" Value="Wrap"/>
+                    </Style>
+                </con:DataGrid.Resources>
+            </con:DataGrid>
+        </Grid>
+    </Grid>
+</Page>
